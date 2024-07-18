@@ -1,26 +1,62 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.FeatureManagement;
+
 namespace ToggleCalculator;
 
 public class Calculator
 {
     public double memory;
-    private readonly bool acceptNegativeNumbers;
 
-    public Calculator()
+    private IFeatureManager _featureManager;
+
+    private bool[] _operations;
+    // private double _readerHelper;
+
+    public Calculator(IFeatureManager featureManager)
     {
         memory = 0;
-        acceptNegativeNumbers = true;
+        _operations = new bool[sizeof(OperationsEnum)+1];
+        _featureManager = featureManager;
     }
 
-    public Calculator(bool negativeNumbers)
+    public async Task RunCalculator()
     {
-        memory = 0;
-        acceptNegativeNumbers = negativeNumbers;
+        Console.WriteLine("Please wait while we initialize the calculator...");
+        var opr = Enum.GetValues<OperationsEnum>();
+        foreach (var entry in opr)
+        {
+            _operations[(int)entry] = await ValidateOperations(entry);
+        }
+        Console.WriteLine("Flags read and validated, read to operate.");
+        
+        // TODO - Input Loop
     }
 
-    public Calculator(double memoryValue, bool negativeNumber)
+    private Task<bool> ValidateOperations(OperationsEnum operationToValidate)
     {
-        memory = memoryValue;
-        acceptNegativeNumbers = negativeNumber;
+        var flagName = GetFlagName(operationToValidate);
+        
+        if (string.IsNullOrWhiteSpace(flagName))
+        {
+            Console.Error.WriteLine($"ERROR: Invalid Flag has been passed for operation {operationToValidate}!");
+            return Task.FromResult(false);
+        }
+
+        return _featureManager.IsEnabledAsync(GetFlagName(operationToValidate));
+    }
+
+    private static string GetFlagName(OperationsEnum operation)
+    {
+        return operation switch
+        {
+            OperationsEnum.AllowNegativeNumbers => "AllowNegativeNumbers",
+            OperationsEnum.Sum => "AllowSum",
+            OperationsEnum.Subtraction => "AllowSubtraction",
+            OperationsEnum.Multiplication => "AllowMultiplication",
+            OperationsEnum.Division => "AllowDivision",
+            _ => string.Empty
+        };
     }
 
     public double Sum(double num1, double num2)
