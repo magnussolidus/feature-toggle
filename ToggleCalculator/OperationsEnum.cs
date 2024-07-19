@@ -7,5 +7,7 @@ public enum OperationsEnum
     Subtraction,
     Multiplication,
     Division,
-    CacheFeatures
+    CacheFeatures,
+    InvalidOperation,
+    CloseProgram
 }
