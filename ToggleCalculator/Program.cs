@@ -13,11 +13,10 @@ namespace ToggleCalculator
 
         static async Task Main(string[] args)
         {
+            // ShowCurrentDirectoryInfo();    // particularly useful to know where to put your appsettings file when debugging
+            
             // check if appsettings file exist
             const string cfgFileName = "appsettings.json";
-            
-            ShowCurrentDirectoryInfo();    // particularly useful to know where to put ur appsettings file when debugging
-            
             if (!File.Exists(cfgFileName))
             {
                 Console.WriteLine("Config File Not Found!");
@@ -44,9 +43,10 @@ namespace ToggleCalculator
             services.AddSingleton(configuration);
             services.AddFeatureManagement();
             
-            Console.WriteLine("Config loaded!");
+            Console.WriteLine("Configuration loaded!");
             
-            var calculator = new Calculator(featureManager);
+            var shouldUseCache = await featureManager.IsEnabledAsync("CacheFlags");
+            var calculator = new Calculator(featureManager, shouldUseCache);
             await calculator.RunCalculator();
         }
 

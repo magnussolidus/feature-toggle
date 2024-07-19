@@ -6,5 +6,6 @@ public enum OperationsEnum
     Sum,
     Subtraction,
     Multiplication,
-    Division
+    Division,
+    CacheFeatures
 }
