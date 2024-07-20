@@ -46,8 +46,7 @@ public class Calculator(IFeatureManager featureManager, bool useCache)
             }
         }
         
-        Console.WriteLine("Flags read and validated, read to operate!\nCurrent allowed operations:");
-        DisplayAllowedOperations();
+        Console.WriteLine("Flags read and validated, read to operate!");
     }
 
     private Task<bool> ValidateOperations(OperationsEnum operationToValidate)

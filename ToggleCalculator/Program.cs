@@ -7,21 +7,20 @@ namespace ToggleCalculator
 {
     internal class Program
     {
-        private  static void ConfigureServices(IServiceCollection services)
-        {
-        }
-
         static async Task Main(string[] args)
         {
-            // ShowCurrentDirectoryInfo();    // particularly useful to know where to put your appsettings file when debugging
-            
+            Console.WriteLine("Initiating the program...");
+            // ShowCurrentDirectoryInfo();    // particularly useful to know where to put your appsettings file when debugging | Obsolete with AdjustCurrentDirectory
+            AdjustCurrentDirectory();
             // check if appsettings file exist
+            Console.WriteLine("Checking for the config file...");
             const string cfgFileName = "appsettings.json";
             if (!File.Exists(cfgFileName))
             {
                 Console.WriteLine("Config File Not Found!");
                 return;
             }
+            Console.WriteLine("File found! Loading...");
             
             // Setup Configuration
             IConfiguration configuration = new ConfigurationBuilder()
@@ -50,6 +49,7 @@ namespace ToggleCalculator
             await calculator.RunCalculator();
         }
 
+        [Obsolete("Make sure to use the AdjustCurrentDirectory method", false)]
         private static void ShowCurrentDirectoryInfo()
         {
             var curDir = Directory.GetCurrentDirectory();
@@ -59,6 +59,21 @@ namespace ToggleCalculator
             {
                 Console.Write($"{fileEntry}\t");
             }
+        }
+
+        private static void AdjustCurrentDirectory()
+        {
+            Console.WriteLine("Adjusting the current directory...");
+            var curDir = Directory.GetCurrentDirectory();
+#if DEBUG            
+            const string debugPath = "bin/Debug/net8.0/";
+            Directory.SetCurrentDirectory(Path.GetRelativePath(debugPath, curDir));
+#endif
+#if RELEASE
+            const string releasePath = "bin/Release/net8.0/";
+            Directory.SetCurrentDirectory(Path.GetRelativePath(releasePath, curDir));
+#endif
+            Console.WriteLine("Done!");
         }
     }
 }
