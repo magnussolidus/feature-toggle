@@ -19,6 +19,10 @@ public class Calculator(IFeatureManager featureManager, bool useCache)
         OperationsEnum operation;
         do
         {
+            if (!useCache)
+            {
+                await CheckFlagOperations();
+            }
             Console.WriteLine("Please, select your operation: (Select 0 to exit)");
             DisplayAllowedOperations();
             var userInput = Console.ReadLine();
@@ -29,6 +33,7 @@ public class Calculator(IFeatureManager featureManager, bool useCache)
 
     private async Task CheckFlagOperations()
     {
+        Console.WriteLine("Currently validating the Features, please wait...");
         var featureNamesAsync = featureManager.GetFeatureNamesAsync();
         
         await foreach (var featureName in featureNamesAsync)
@@ -46,7 +51,7 @@ public class Calculator(IFeatureManager featureManager, bool useCache)
             }
         }
         
-        Console.WriteLine("Flags read and validated, read to operate!");
+        Console.WriteLine("Features read and validated. Ready to operate!");
     }
 
     private Task<bool> ValidateOperations(OperationsEnum operationToValidate)
