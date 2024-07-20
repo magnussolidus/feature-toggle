@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.FeatureManagement;
 
 namespace ToggleCalculator
@@ -53,7 +52,7 @@ namespace ToggleCalculator
         private static void ShowCurrentDirectoryInfo()
         {
             var curDir = Directory.GetCurrentDirectory();
-            var curFiles = Directory.GetFiles(curDir).Select(x => Path.GetFileName(x)).ToArray();
+            var curFiles = Directory.GetFiles(curDir).Select(Path.GetFileName).ToArray();
             Console.WriteLine($"Current Path: {curDir}\nCurrent Files:\n");
             foreach (var fileEntry in curFiles)
             {
