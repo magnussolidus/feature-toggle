@@ -13,6 +13,7 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0-preview.6.24327.7" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0-preview.6.24327.7" />
       <PackageReference Include="Microsoft.FeatureManagement" Version="3.4.0" />
+      <PackageReference Include="RulesEngine" Version="5.0.3" />
     </ItemGroup>
 
 </Project>
